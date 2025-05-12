@@ -32,7 +32,7 @@ const SanhChinh = () => {
       audio?.removeEventListener("timeupdate", updateProgress);
       clearTimeout(timeout);
     };
-  }, [audioRef, isPlaying]);
+  }, []);
 
   const togglePlay = () => {
     const audio = audioRef.current;
@@ -71,10 +71,10 @@ const SanhChinh = () => {
   };
 
   return (
-    <div className="w-full h-screen flex items-start justify-center relative px-2">
-      <div className="absolute inset-0 bg-black opacity-30 z-0" />
+    <div className="w-full h-screen flex items-start justify-center relative px-2 overflow-hidden">
+      <div className="absolute inset-0 bg-black opacity-20 z-0" />
       {!showText && (
-        <div className="mt-32 md:mt-12 space-y-4 flex flex-col items-center">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 space-y-16 flex flex-col items-center">
           <FlipText className="text-4xl md:tracking-widest font-bold text-black dark:text-white md:text-7xl md:leading-[5rem]">
             Sratch to reveal
           </FlipText>
@@ -95,10 +95,15 @@ const SanhChinh = () => {
         </div>
       )}
 
-      {showText && <Text />}
+      {showText && (
+        <>
+          <Text />
+        </>
+      )}
 
       <motion.div
-        className="mt-12 flex items-center justify-between gap-6 fixed bottom-0 left-0 w-full bg-white shadow-md py-2 pe-4 z-50"
+        className="mt-12 flex items-center justify-between gap-6 fixed bottom-0 left-0 right-0 w-full bg-white shadow-md py-2 pe-4 z-50"
+        initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: showMusic ? 1 : 0, y: showMusic ? 0 : 100 }}
         transition={{ duration: 0.8 }}
       >
@@ -107,10 +112,10 @@ const SanhChinh = () => {
           <img
             src="/us.jpg" // Đặt ảnh bạn và người ấy tại public/us.jpg
             alt="us"
-            className="w-24 h-24 rounded object-cover"
+            className="w-16 h-16 md:w-24 md:h-24 rounded object-cover"
           />
           <div>
-            <p className="text-2xl font-semibold text-pink-500 font-[Sansita_Swashed]">
+            <p className=" md:text-2xl font-semibold text-pink-500 font-[Sansita_Swashed]">
               Bản tình ca của đôi ta
             </p>
             <p className="text-md text-gray-500 w-fit">
