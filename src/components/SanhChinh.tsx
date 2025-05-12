@@ -1,148 +1,153 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import MusicPlayer from "./MusicPlayer";
-import confetti from "canvas-confetti";
-
-const startDate = new Date("2025-04-12T00:00:00"); // Ngày bắt đầu yêu nhau
+import React, { useEffect, useRef, useState } from "react";
+import Text from "./Text";
+import { FaPause, FaPlay, FaRedo } from "react-icons/fa";
+import { ScratchToReveal } from "./magicui/scratch-to-reveal";
+import { motion } from "framer-motion";
+import { FlipText } from "./magicui/flip-text";
 
 const SanhChinh = () => {
-  const [timeDiff, setTimeDiff] = useState({
-    years: 0,
-    months: 0,
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-  const [calculating, setCalculating] = useState(true);
-  //   const [bgIndex, setBgIndex] = useState(0);
-
-  //   const backgrounds = [
-  //     "/bg1.jpg",
-  //     "/bg2.jpg",
-  //     "/bg3.jpg", // Đổi ảnh theo nhu cầu (nên để trong public folder)
-  //   ];
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [showText, setShowText] = useState(false);
+  const [showMusic, setShowMusic] = useState(false);
+  const [showImage, setShowImage] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      let years = now.getFullYear() - startDate.getFullYear();
-      let months = now.getMonth() - startDate.getMonth();
-      let days = now.getDate() - startDate.getDate();
-      let hours = now.getHours() - startDate.getHours();
-      let minutes = now.getMinutes() - startDate.getMinutes();
-      let seconds = now.getSeconds() - startDate.getSeconds();
+    const timeout = setTimeout(() => setShowImage(true), 50);
 
-      if (seconds < 0) {
-        seconds += 60;
-        minutes--;
+    const audio = audioRef.current;
+    const updateProgress = () => {
+      if (audio) {
+        setProgress(audio.currentTime);
+        setDuration(audio.duration || 0);
       }
-      if (minutes < 0) {
-        minutes += 60;
-        hours--;
-      }
-      if (hours < 0) {
-        hours += 24;
-        days--;
-      }
-      if (days < 0) {
-        const prevMonth = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          0
-        ).getDate();
-        days += prevMonth;
-        months--;
-      }
-      if (months < 0) {
-        months += 12;
-        years--;
-      }
+    };
 
-      setTimeDiff({ years, months, days, hours, minutes, seconds });
-      setCalculating(false);
-    }, 1000);
+    audio?.addEventListener("timeupdate", updateProgress);
+    return () => {
+      audio?.removeEventListener("timeupdate", updateProgress);
+      clearTimeout(timeout);
+    };
+  }, [audioRef, isPlaying]);
 
-    return () => clearInterval(interval);
-  }, []);
+  const togglePlay = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
 
-  useEffect(() => {
-    confetti({
-      particleCount: 150,
-      spread: 130,
-      origin: { y: 0.6, x: 0.5 },
-    });
-  }, []);
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play().catch(() => {});
+    }
 
-  //   // Tự động đổi nền mỗi 10 giây
-  //   useEffect(() => {
-  //     const change = setInterval(() => {
-  //       setBgIndex((prev) => (prev + 1) % backgrounds.length);
-  //     }, 10000);
-  //     return () => clearInterval(change);
-  //   }, [backgrounds.length]);
+    setIsPlaying(!isPlaying);
+  };
+
+  const resetMusic = () => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+      setIsPlaying(true);
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const min = Math.floor(time / 60);
+    const sec = Math.floor(time % 60)
+      .toString()
+      .padStart(2, "0");
+    return `${min}:${sec}`;
+  };
+
+  const handleComplete = () => {
+    setShowText(true);
+    setShowMusic(true);
+    togglePlay();
+  };
 
   return (
-    <div
-      className="w-full h-screen flex items-center justify-center relative"
-      //   style={{
-      //     backgroundImage: `url(${backgrounds[bgIndex]})`,
-      //     backgroundSize: "cover",
-      //     backgroundPosition: "center",
-      //     transition: "background-image 1s ease-in-out",
-      //   }}
-    >
+    <div className="w-full h-screen flex items-start justify-center relative px-2">
       <div className="absolute inset-0 bg-black opacity-30 z-0" />
-
-      <div className="relative z-10 text-center">
-        <h1 className="text-3xl font-bold mb-4">Chúng mình đã bên nhau được</h1>
-        <div className="flex flex-wrap gap-3 justify-center text-4xl my-4 font-semibold">
-          {calculating ? (
-            <span className="text-md">(đợi anh tính xíuu...)</span>
-          ) : (
-            <>
-              {timeDiff.years > 0 && <span>{timeDiff.years} năm</span>}
-              {timeDiff.months > 0 && <span>{timeDiff.months} tháng</span>}
-              <span>{timeDiff.days} ngày</span>
-              <span>{timeDiff.hours} giờ</span>
-              <span>{timeDiff.minutes} phút</span>
-              <span>{timeDiff.seconds} giây</span>
-            </>
-          )}
-        </div>
-        <h1 className="text-3xl font-bold mb-4">rùi đấyyy 🥰</h1>
-
-        <div className="mt-12 flex items-center justify-center gap-6">
-          <div className="flex flex-col items-center">
-            <div className="relative w-20 md:w-30 h-20 md:h-30 rounded-full border-2 border-white overflow-hidden">
+      {!showText && (
+        <div className="mt-32 md:mt-12 space-y-4 flex flex-col items-center">
+          <FlipText className="text-4xl md:tracking-widest font-bold text-black dark:text-white md:text-7xl md:leading-[5rem]">
+            Sratch to reveal
+          </FlipText>
+          <ScratchToReveal
+            className="flex items-center justify-center overflow-hidden rounded-2xl border-2 bg-gray-100 "
+            width={300}
+            height={300}
+            onComplete={handleComplete}
+          >
+            {showImage && (
               <img
-                src="/ava1.jpg"
-                alt="Người 1"
-                className="object-cover scale-200 -translate-y-1 rotate-y-180"
+                src="/us.jpg"
+                alt="us"
+                className="w-full h-full object-cover"
               />
-            </div>
-            <span className="mt-2 text-xl font-bold">Béo 🤵</span>
-          </div>
+            )}
+          </ScratchToReveal>
+        </div>
+      )}
 
-          <div className="text-6xl animate-bounce">❤️</div>
+      {showText && <Text />}
 
-          <div className="flex flex-col items-center">
-            <div className="relative w-20 md:w-30 h-20 md:h-30 rounded-full border-2 border-white overflow-hidden">
-              <img
-                src="/ava2.png"
-                alt="Người 1"
-                className="object-cover scale-120"
-              />
-            </div>
-            <span className="mt-2 text-xl font-bold">Ngố 👰</span>
+      <motion.div
+        className="mt-12 flex items-center justify-between gap-6 fixed bottom-0 left-0 w-full bg-white shadow-md py-2 pe-4 z-50"
+        animate={{ opacity: showMusic ? 1 : 0, y: showMusic ? 0 : 100 }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="flex items-center gap-3">
+          {/* Ảnh đại diện bài hát */}
+          <img
+            src="/us.jpg" // Đặt ảnh bạn và người ấy tại public/us.jpg
+            alt="us"
+            className="w-24 h-24 rounded object-cover"
+          />
+          <div>
+            <p className="text-2xl font-semibold text-pink-500 font-[Sansita_Swashed]">
+              Bản tình ca của đôi ta
+            </p>
+            <p className="text-md text-gray-500 w-fit">
+              {formatTime(progress)} / {formatTime(duration)}
+            </p>
           </div>
         </div>
 
-        <div className="flex justify-center mt-12">
-          <MusicPlayer />
+        {/* Điều khiển nhạc */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={togglePlay}
+            className="text-pink-300 p-2 rounded-full hover:bg-gray-100 transition hover:cursor-pointer"
+          >
+            {isPlaying ? <FaPause size={25} /> : <FaPlay size={25} />}
+          </button>
+          <button
+            onClick={resetMusic}
+            className="text-pink-300 p-2 rounded-full hover:bg-gray-100 transition hover:cursor-pointer"
+          >
+            <FaRedo size={20} />
+          </button>
         </div>
-      </div>
+
+        {/* Thanh progress */}
+        <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-200">
+          <div
+            className="h-full bg-pink-500 transition-all"
+            style={{ width: `${(progress / duration) * 100 || 0}%` }}
+          />
+        </div>
+
+        <audio ref={audioRef} loop>
+          <source src="/love-song.m4a" type="audio/mpeg" />
+          Trình duyệt không hỗ trợ audio.
+        </audio>
+      </motion.div>
     </div>
   );
 };
