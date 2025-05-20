@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
-const Loader = dynamic(() => import("./Loader"), {
+const Loader = dynamic(() => import("../Loader"), {
   ssr: false, // Không render trên server
 });
 
@@ -38,7 +38,7 @@ const PasscodeScreen = () => {
 
         setTimeout(() => {
           localStorage.setItem("auth", "true");
-          router.push("/sanh-chinh");
+          router.push("/menu");
         }, 1200);
 
         return;
