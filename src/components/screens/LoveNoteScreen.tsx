@@ -98,7 +98,7 @@ export default function LoiIuThuong() {
         {/* Ảnh trai thủy tinh */}
         <div className="w-64 h-64 mb-6 relative">
           <Image
-            src="/love-notes.jfif"
+            src="/love-notes.jpg"
             fill
             alt="Trai thủy tinh"
             className="rounded-full object-cover w-full h-full shadow-lg border-4 border-white"
