@@ -10,17 +10,20 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",
+    "@tabler/icons-react": "^3.33.0",
     "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.10.5",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.509.0",
-    "motion": "^12.10.5",
+    "motion": "^12.12.1",
     "next": "15.3.2",
+    "openai": "^4.100.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
+    "react-webcam": "^7.2.0",
     "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {
