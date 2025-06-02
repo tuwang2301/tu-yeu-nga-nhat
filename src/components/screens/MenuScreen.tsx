@@ -1,4 +1,10 @@
-import { Heart, Clock, MessageCircleHeart, SparkleIcon } from "lucide-react";
+import {
+  Heart,
+  Clock,
+  MessageCircleHeart,
+  SparkleIcon,
+  Camera,
+} from "lucide-react";
 import Link from "next/link";
 
 export default function CuteMenu() {
@@ -16,6 +22,12 @@ export default function CuteMenu() {
       color: "from-purple-300 to-pink-200",
     },
     {
+      title: "Phô tô bút",
+      href: "/photobooth",
+      icon: <Camera className="w-5 h-5" />,
+      color: "from-green-300 to-green-200",
+    },
+    {
       title: "Coming soon...",
       href: "/sanh-chinh",
       icon: <SparkleIcon className="w-5 h-5" />,
@@ -25,7 +37,7 @@ export default function CuteMenu() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white bg-opacity-80 backdrop-blur-sm rounded-3xl shadow-xl p-8 border border-pink-200">
+      <div className="w-full bg-white bg-opacity-80 backdrop-blur-sm rounded-3xl shadow-xl p-8 border border-pink-200">
         <div className="flex items-center justify-center mb-6">
           <Heart className="text-pink-500 mr-2 w-6 h-6" />
           <h1 className="text-2xl md:text-3xl font-bold text-pink-600 text-center">

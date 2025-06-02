@@ -188,6 +188,7 @@ export default function LoiIuThuong() {
                         videoConstraints={{
                           facingMode: "user",
                         }}
+                        mirrored
                         className="w-full h-full object-cover"
                       />
                     ) : (

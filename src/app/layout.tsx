@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Pattaya, Sansita_Swashed } from "next/font/google";
 import "./globals.css";
+import BackToMenu from "@/components/BackToMenu";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +44,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${sanistaSwashed.variable} ${pattaya.variable} antialiased`}
       >
         <div className="h-screen w-screen bg-gradient-to-br from-pink-100 to-pink-300 flex items-center justify-center">
+          <BackToMenu />
           {children}
         </div>
       </body>
