@@ -36,7 +36,7 @@ export default function LayoutSelector({
               : " border-gray-300"
           }`}
         >
-          <PhotoLayout layoutChoice={"2x6"} />
+          <PhotoLayout height={504} layoutChoice={"2x6"} />
           <p className="text-center text-sm mt-2">Mini</p>
         </div>
 
@@ -48,7 +48,7 @@ export default function LayoutSelector({
               : " border-gray-300"
           }`}
         >
-          <PhotoLayout layoutChoice={"4x6"} />
+          <PhotoLayout height={504} layoutChoice={"4x6"} />
           <p className="text-center text-sm mt-2">Hong mini</p>
         </div>
       </div>
